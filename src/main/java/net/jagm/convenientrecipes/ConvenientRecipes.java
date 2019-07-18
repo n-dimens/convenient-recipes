@@ -23,15 +23,16 @@ import net.minecraft.item.crafting.IRecipe;
 import org.apache.logging.log4j.Level;
 
 @Mod(
-        modid = "convenientrecipes",
+        modid = "convenient-recipes",
         name = "Convenient Recipes",
-        version = "1.3.1"
+        version = "1.3.2"
 )
 public class ConvenientRecipes {
-    public static final String modid = "convenientrecipes";
+    public static final String modid = "convenient-recipes";
     public static final String modname = "Convenient Recipes";
-    public static final String modversion = "1.3.1";
-    @Instance("convenientrecipes")
+    public static final String modversion = "1.3.2";
+
+    @Instance("convenient-recipes")
     public static ConvenientRecipes instance;
 
     public ConvenientRecipes() {
