@@ -7,13 +7,14 @@ package net.jagm.convenientrecipes;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -28,84 +29,19 @@ import org.apache.logging.log4j.Level;
         version = "1.3.2"
 )
 public class ConvenientRecipes {
-    public static final String modid = "convenient-recipes";
-    public static final String modname = "Convenient Recipes";
-    public static final String modversion = "1.3.2";
-
-    @Instance("convenient-recipes")
-    public static ConvenientRecipes instance;
+    private final HashSet<Item> itemsForOverrideRecipe;
 
     public ConvenientRecipes() {
+        this.itemsForOverrideRecipe = getItemsForOverrideRecipe();
     }
 
     @Mod.EventHandler
-    public static void preInit(FMLPreInitializationEvent e) {
-        List<IRecipe> recipeList = CraftingManager.getInstance().getRecipeList();
+    public void preInit(FMLPreInitializationEvent e) {
+        List recipeList = CraftingManager.getInstance().getRecipeList();
         Iterator iterator = recipeList.iterator();
-
         while (iterator.hasNext()) {
-            ItemStack stack = ((IRecipe) iterator.next()).getRecipeOutput();
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.oak_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.birch_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.spruce_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.jungle_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.acacia_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.dark_oak_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.stone_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.brick_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.stone_brick_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.nether_brick_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.sandstone_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.quartz_stairs)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.cobblestone_wall)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.nether_brick_fence)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.fence)) {
-                iterator.remove();
-            }
-
-            if (stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.ladder)) {
+            IRecipe recipe = (IRecipe) iterator.next();
+            if (isRecipeForRemoval(recipe)) {
                 iterator.remove();
             }
         }
@@ -114,7 +50,7 @@ public class ConvenientRecipes {
     }
 
     @Mod.EventHandler
-    public static void load(FMLInitializationEvent e) {
+    public void load(FMLInitializationEvent e) {
         GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots), "i i", "i i", 'i', Blocks.iron_bars);
         GameRegistry.addRecipe(new ItemStack(Items.chainmail_leggings), "iii", "i i", "i i", 'i', Blocks.iron_bars);
         GameRegistry.addRecipe(new ItemStack(Items.chainmail_chestplate), "i i", "iii", "iii", 'i', Blocks.iron_bars);
@@ -157,5 +93,35 @@ public class ConvenientRecipes {
 
         FMLLog.log("Convenient Recipes", Level.INFO, "Added new recipes and replaced old ones.");
         FMLLog.log("Convenient Recipes", Level.INFO, "Initialisation complete.");
+    }
+
+    private boolean isRecipeForRemoval(IRecipe recipe) {
+        ItemStack recipeOutput = recipe.getRecipeOutput();
+        if (recipeOutput == null) {
+            return false;
+        }
+
+        return this.itemsForOverrideRecipe.contains(recipeOutput.getItem());
+    }
+
+    private static HashSet<Item> getItemsForOverrideRecipe() {
+        HashSet<Item> result = new HashSet<Item>();
+        result.add(Item.getItemFromBlock(Blocks.oak_stairs));
+        result.add(Item.getItemFromBlock(Blocks.birch_stairs));
+        result.add(Item.getItemFromBlock(Blocks.spruce_stairs));
+        result.add(Item.getItemFromBlock(Blocks.jungle_stairs));
+        result.add(Item.getItemFromBlock(Blocks.acacia_stairs));
+        result.add(Item.getItemFromBlock(Blocks.dark_oak_stairs));
+        result.add(Item.getItemFromBlock(Blocks.stone_stairs));
+        result.add(Item.getItemFromBlock(Blocks.brick_stairs));
+        result.add(Item.getItemFromBlock(Blocks.stone_brick_stairs));
+        result.add(Item.getItemFromBlock(Blocks.nether_brick_stairs));
+        result.add(Item.getItemFromBlock(Blocks.sandstone_stairs));
+        result.add(Item.getItemFromBlock(Blocks.quartz_stairs));
+        result.add(Item.getItemFromBlock(Blocks.cobblestone_wall));
+        result.add(Item.getItemFromBlock(Blocks.nether_brick_fence));
+        result.add(Item.getItemFromBlock(Blocks.fence));
+        result.add(Item.getItemFromBlock(Blocks.ladder));
+        return result;
     }
 }
