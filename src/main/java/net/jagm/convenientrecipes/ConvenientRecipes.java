@@ -90,6 +90,7 @@ public class ConvenientRecipes {
         GameRegistry.addRecipe(new ItemStack(Blocks.nether_brick_fence, 6), "###", "###", '#', Items.netherbrick);
         GameRegistry.addRecipe(new ItemStack(Blocks.fence, 12), "###", "###", '#', Items.stick);
         GameRegistry.addRecipe(new ItemStack(Blocks.ladder, 14), "# #", "###", "# #", '#', Items.stick);
+        GameRegistry.addRecipe(new ItemStack(Items.slime_ball, 3), "sss", "kkk", 's', Items.sugar, 'k', Blocks.cactus);
 
         FMLLog.log("Convenient Recipes", Level.INFO, "Added new recipes and replaced old ones.");
         FMLLog.log("Convenient Recipes", Level.INFO, "Initialisation complete.");
